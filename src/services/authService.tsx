@@ -185,6 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const activate = useCallback(async (key: string) => {
     const result = await activationApi.activate(key)
+    if (!result.success) throw new Error(result.message || 'Activation failed.')
     const valid = await refreshActivation()
     if (!valid) throw new Error('Activation succeeded, but the activation cookie could not be verified. Check the browser cookie settings.')
     return result.message
@@ -192,7 +193,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (username: string, password: string) => {
     const response = await authApi.login(username, password)
-    if (!response.data?.token) throw new Error('Login did not return an access token.')
+    if (!response.success) throw new Error(response.message || 'Login failed.')
+    if (!response.data?.token) throw new Error('Login failed. Please try again.')
     storageService.setToken(response.data.token)
     setDenied(false)
     setAuthenticated(true)
@@ -201,6 +203,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = useCallback(async (username: string, password: string) => {
     const response = await authApi.signup(username, password)
+    if (!response.success) throw new Error(response.message || 'Unable to create account.')
     return response.message
   }, [])
 

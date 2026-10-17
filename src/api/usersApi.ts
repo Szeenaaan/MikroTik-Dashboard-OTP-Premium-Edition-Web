@@ -11,7 +11,7 @@ function isPaginator<T>(value: unknown): value is LaravelPagination<T> {
 function unwrapPaginator<T>(value: unknown): LaravelPagination<T> {
   if (isPaginator<T>(value)) return value
   if (typeof value === 'object' && value !== null && 'data' in value && isPaginator<T>(value.data)) return value.data
-  throw new Error('Laravel returned an unexpected pagination response. Check the API controller.')
+  throw new Error('Unable to load the requested records.')
 }
 
 export const usersApi = {
@@ -21,6 +21,7 @@ export const usersApi = {
   },
   async action(id: number, operation: 'block' | 'unblock' | 'bypass' | 'remove-bypass'): Promise<ApiEnvelope> {
     const response = await api.post<ApiEnvelope>(`/users/${id}/${operation}`, undefined, { failurePresentation: 'local' })
+    if (!response.data.success) throw new Error(response.data.message || 'Unable to update user.')
     return response.data
   },
   async export(filters: Filters): Promise<Blob> {

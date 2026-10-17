@@ -16,10 +16,12 @@ export const settingsApi = {
   },
   async updateDataLimit(data_limit: number): Promise<ApiEnvelope> {
     const response = await api.post<ApiEnvelope>('/settings/data-limit', { data_limit })
+    if (!response.data.success) throw new Error(response.data.message || 'Unable to save data limit.')
     return response.data
   },
   async updateSessionHours(session_hours: number): Promise<ApiEnvelope> {
     const response = await api.post<ApiEnvelope>('/settings/session-hours', { session_hours })
+    if (!response.data.success) throw new Error(response.data.message || 'Unable to save session duration.')
     return response.data
   },
 }

@@ -11,7 +11,7 @@ function isPaginator<T>(value: unknown): value is LaravelPagination<T> {
 function unwrapPaginator<T>(value: unknown): LaravelPagination<T> {
   if (isPaginator<T>(value)) return value
   if (typeof value === 'object' && value !== null && 'data' in value && isPaginator<T>(value.data)) return value.data
-  throw new Error('Laravel returned an unexpected pagination response. Check the API controller.')
+  throw new Error('Unable to load the requested records.')
 }
 
 export const sessionsApi = {
@@ -21,10 +21,12 @@ export const sessionsApi = {
   },
   async terminate(id: number): Promise<ApiEnvelope> {
     const response = await api.post<ApiEnvelope>(`/sessions/${id}/terminate`, undefined, { failurePresentation: 'local' })
+    if (!response.data.success) throw new Error(response.data.message || 'Unable to terminate session.')
     return response.data
   },
   async updateLimit(id: number, data_limit: number): Promise<ApiEnvelope> {
     const response = await api.post<ApiEnvelope>(`/sessions/${id}/data-limit`, { data_limit }, { failurePresentation: 'local' })
+    if (!response.data.success) throw new Error(response.data.message || 'Unable to update data limit.')
     return response.data
   },
   async export(filters: Filters): Promise<Blob> {
