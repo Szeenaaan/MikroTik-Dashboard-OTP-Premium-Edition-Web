@@ -10,9 +10,6 @@ import { useToast } from '../../components/feedback/Toast'
 import { useAuth } from '../../services/authService'
 import { errorMessage } from '../../utils/errorMessage'
 
-// Only display registration when Laravel's signup endpoint is verified and secured.
-const signupEnabled = import.meta.env.VITE_ENABLE_SIGNUP === 'true'
-
 export function AuthPage() {
   const { activated, authenticated, login, signup } = useAuth()
   const { notify } = useToast()
@@ -41,7 +38,6 @@ export function AuthPage() {
       return
     }
     if (mode === 'signup') {
-      if (!signupEnabled) return
       if (password !== confirm) {
         notify('Passwords do not match.', 'error')
         return
@@ -73,20 +69,20 @@ export function AuthPage() {
         <span className="eyebrow">NETDDASH</span>
         <h1>{mode === 'login' ? 'Login' : 'Sign Up'}</h1>
       </div>
-      {signupEnabled && <div className="auth-tabs">
+      <div className="auth-tabs">
         <button type="button" className={mode === 'login' ? 'active' : ''} onClick={() => switchMode('login')}>Login</button>
         <button type="button" className={mode === 'signup' ? 'active' : ''} onClick={() => switchMode('signup')}>Sign Up</button>
-      </div>}
+      </div>
       <form className="auth-form" onSubmit={event => { void submit(event) }}>
         <AppInput label="Username" autoComplete="username" placeholder="Enter your username" value={username} onChange={event => setUsername(event.target.value)} required />
         <PasswordInput label="Password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'} placeholder="Enter your password" value={password} onChange={event => setPassword(event.target.value)} required />
-        {signupEnabled && mode === 'signup' && <PasswordInput label="Confirm Password" autoComplete="new-password" placeholder="Confirm password" value={confirm} onChange={event => setConfirm(event.target.value)} required />}
+        {mode === 'signup' && <PasswordInput label="Confirm Password" autoComplete="new-password" placeholder="Confirm password" value={confirm} onChange={event => setConfirm(event.target.value)} required />}
         <AppButton busy={busy} className="auth-submit" type="submit">{mode === 'login' ? 'Login' : 'Create Account'} <ArrowRight size={17} /></AppButton>
       </form>
-      {signupEnabled && <p className="auth-form-switch">
+      <p className="auth-form-switch">
         {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
         <button type="button" onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}>{mode === 'login' ? 'Sign Up' : 'Login'}</button>
-      </p>}
+      </p>
     </section>
   </AuthLayout>
 }
