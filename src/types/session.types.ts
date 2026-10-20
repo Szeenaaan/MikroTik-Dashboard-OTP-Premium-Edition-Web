@@ -10,5 +10,6 @@ export interface HotspotSession {
   data_limit: number | string | null
   session_time: number | string | null
   status: string
+  internet: string
   is_active: boolean | number
 }
