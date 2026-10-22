@@ -1,3 +1,4 @@
+:root { --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px; --header-height: 80px; }
 :root, :root[data-theme='light'] {
   color-scheme: light;
   --bg: #f2f9fd;
@@ -24,7 +25,7 @@
   --shadow: 0 8px 28px rgba(21, 78, 115, .065);
   --shadow-heavy: 0 28px 80px rgba(21, 78, 115, .14);
   --chart-grid: #e2ecf3;
-  --radius: 18px;
+  --radius: 16px;
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
@@ -52,5 +53,5 @@
   --shadow: 0 8px 32px rgba(0,0,0,.18);
   --shadow-heavy: 0 30px 80px rgba(0,0,0,.4);
   --chart-grid: #355041;
-  --radius: 18px;
+  --radius: 16px;
 }

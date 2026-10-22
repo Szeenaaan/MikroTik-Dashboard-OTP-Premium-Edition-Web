@@ -1,6 +1,7 @@
 import { api } from './axiosClient'
 import type { ApiEnvelope } from '../types/api.types'
 import type { SettingsData } from '../types/settings.types'
+import type { ChangePasswordRequest } from '../types/settings.types'
 
 // Optional read endpoint is an API path, never a hostname or full URL.
 const settingsReadEndpoint = import.meta.env.VITE_SETTINGS_READ_ENDPOINT?.trim() || ''
@@ -22,6 +23,11 @@ export const settingsApi = {
   async updateSessionHours(session_hours: number): Promise<ApiEnvelope> {
     const response = await api.post<ApiEnvelope>('/settings/session-hours', { session_hours })
     if (!response.data.success) throw new Error(response.data.message || 'Unable to save session duration.')
+    return response.data
+  },
+  async changePassword(data: ChangePasswordRequest): Promise<ApiEnvelope> {
+    const response = await api.post<ApiEnvelope>('/settings/change-password', data)
+    if (!response.data.success) throw new Error(response.data.message || 'Unable to change password.')
     return response.data
   },
 }

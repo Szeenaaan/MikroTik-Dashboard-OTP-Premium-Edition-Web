@@ -24,10 +24,10 @@ export function DashboardLayout() {
 
   return (
     <div className="dashboard-shell">
-      <Header onOpenSidebar={() => setSidebarOpen(true)} sidebarOpen={sidebarOpen} />
+      <Header onOpenSidebar={() => setSidebarOpen(open => !open)} sidebarOpen={sidebarOpen} />
       <div className="dashboard-body">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <div className="dashboard-main">
+        <div className="dashboard-main" inert={sidebarOpen}>
           <main className="page-content"><Outlet /></main>
         </div>
       </div>

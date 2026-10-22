@@ -4,7 +4,9 @@ import { LoadingState } from '../components/feedback/LoadingState'
 import { NetworkBackground } from '../background/NetworkBackground'
 import { AuthPage } from '../pages/Auth/AuthPage'
 import { ActivationPage } from '../pages/Activation/ActivationPage'
-import { DashboardPage } from '../pages/Dashboard/DashboardPage'
+import { lazy, Suspense } from 'react'
+
+const DashboardPage = lazy(() => import('../pages/Dashboard/DashboardPage').then(module => ({ default: module.DashboardPage })))
 import { UsersPage } from '../pages/Users/UsersPage'
 import { SessionsPage } from '../pages/Sessions/SessionsPage'
 import { MonitoringPage } from '../pages/Monitoring/MonitoringPage'
@@ -40,7 +42,7 @@ export function AppRouter() {
     <Route path="/activate" element={<ActivationPage/>}/>
     <Route path="/login" element={<AuthPage/>}/>
     <Route element={<ProtectedRoute><DashboardLayout/></ProtectedRoute>}>
-      <Route path="/dashboard" element={<DashboardPage/>}/>
+      <Route path="/dashboard" element={<Suspense fallback={<LoadingState text="Loading dashboard…"/>}><DashboardPage/></Suspense>}/>
       <Route path="/users" element={<UsersPage/>}/>
       <Route path="/sessions" element={<SessionsPage/>}/>
       <Route path="/monitoring" element={<MonitoringPage/>}/>
